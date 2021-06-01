@@ -55,6 +55,9 @@
 body {
   font-family: 'Allerta', sans-serif;
 }
+.cursor {
+  cursor: pointer;
+}
 .headerppal {
   background: #126798;
   overflow: hidden;

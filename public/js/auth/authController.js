@@ -18,7 +18,7 @@ $(() => {
 
 	$("#authGoogle").click(() => objAuth.authCuentaGoogle())
 
-	$("#authFB").click(() => objAuth.authCuentaFacebook());
+	$("#authFB").click(() => objAuth.authCuentaFacebook())
 
 	// $("#authTwitter").click(() => //AUTH con Twitter);
 
@@ -30,5 +30,11 @@ $(() => {
 	$("#btnIniciarSesion").click(() => {
 		$("#modalRegistro").modal("close")
 		$("#modalSesion").modal("open")
+	})
+
+	$("#btnRecordarContraseña").click(() => {
+		const email = $("#emailSesion").val()
+		const auth = new Autenticacion()
+		auth.resetPassword(email)
 	})
 })
