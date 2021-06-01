@@ -1,23 +1,32 @@
 class Post {
-  constructor () {
-      // TODO inicializar firestore y settings
+	constructor() {
+		this.db = firebase.firestore()
+	}
 
-  }
+	crearPost(uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
+		return this.db.collection("posts").add({
+			uid,
+			autor: emailUser,
+			titulo,
+			descripcion,
+			imagenLink,
+			videoLink,
+			fecha: firebase.firestore.FieldValue.serverTimestamp(),
+		})
+		.then(refDoc => {
+			console.log(`Id del post => ${refDoc.id}`);
+		})
+		.catch(err => {
+			console.log(`Error creando el post => ${err}`);
+		})
+	}
 
-  crearPost (uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
-    
-  }
+	consultarTodosPost() {}
 
-  consultarTodosPost () {
-    
-  }
+	consultarPostxUsuario(emailUser) {}
 
-  consultarPostxUsuario (emailUser) {
-    
-  }
-
-  obtenerTemplatePostVacio () {
-    return `<article class="post">
+	obtenerTemplatePostVacio() {
+		return `<article class="post">
       <div class="post-titulo">
           <h5>Crea el primer Post a la comunidad</h5>
       </div>
@@ -42,18 +51,18 @@ class Post {
       <div class="post-footer container">         
       </div>
   </article>`
-  }
+	}
 
-  obtenerPostTemplate (
-    autor,
-    titulo,
-    descripcion,
-    videoLink,
-    imagenLink,
-    fecha
-  ) {
-    if (imagenLink) {
-      return `<article class="post">
+	obtenerPostTemplate(
+		autor,
+		titulo,
+		descripcion,
+		videoLink,
+		imagenLink,
+		fecha
+	) {
+		if (imagenLink) {
+			return `<article class="post">
             <div class="post-titulo">
                 <h5>${titulo}</h5>
             </div>
@@ -85,9 +94,9 @@ class Post {
                 </div>
             </div>
         </article>`
-    }
+		}
 
-    return `<article class="post">
+		return `<article class="post">
                 <div class="post-titulo">
                     <h5>${titulo}</h5>
                 </div>
@@ -120,5 +129,5 @@ class Post {
                     </div>
                 </div>
             </article>`
-  }
+	}
 }
