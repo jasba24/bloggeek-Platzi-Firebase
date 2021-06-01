@@ -4,26 +4,69 @@ class Post {
 	}
 
 	crearPost(uid, emailUser, titulo, descripcion, imagenLink, videoLink) {
-		return this.db.collection("posts").add({
-			uid,
-			autor: emailUser,
-			titulo,
-			descripcion,
-			imagenLink,
-			videoLink,
-			fecha: firebase.firestore.FieldValue.serverTimestamp(),
-		})
-		.then(refDoc => {
-			console.log(`Id del post => ${refDoc.id}`);
-		})
-		.catch(err => {
-			console.log(`Error creando el post => ${err}`);
+		return this.db
+			.collection("posts")
+			.add({
+				uid,
+				autor: emailUser,
+				titulo,
+				descripcion,
+				imagenLink,
+				videoLink,
+				fecha: firebase.firestore.FieldValue.serverTimestamp(),
+			})
+			.then(refDoc => {
+				console.log(`Id del post => ${refDoc.id}`)
+			})
+			.catch(err => {
+				console.log(`Error creando el post => ${err}`)
+			})
+	}
+
+	consultarTodosPost() {
+		this.db.collection("posts").onSnapshot(querySnapshot => {
+			$("#posts").empty()
+			if (querySnapshot.empty) {
+				$("#posts").append(this.obtenerTemplatePostVacio())
+			} else {
+				querySnapshot.forEach(post => {
+					let postHtml = this.obtenerPostTemplate(
+						post.data().autor,
+						post.data().titulo,
+						post.data().descripcion,
+						Utilidad.configurarUrlYoutube(post.data().videoLink),
+						post.data().imagenLink,
+						Utilidad.obtenerFecha(post.data().fecha.toDate())
+					)
+					$("#posts").append(postHtml)
+				})
+			}
 		})
 	}
 
-	consultarTodosPost() {}
-
-	consultarPostxUsuario(emailUser) {}
+	consultarPostxUsuario(emailUser) {
+		this.db
+			.collection("posts")
+			.where("autor", "==", emailUser)
+			.onSnapshot(querySnapshot => {
+				$("#posts").empty()
+				if (querySnapshot.empty) {
+					$("#posts").append(this.obtenerTemplatePostVacio())
+				} else {
+					querySnapshot.forEach(post => {
+						let postHtml = this.obtenerPostTemplate(
+							post.data().autor,
+							post.data().titulo,
+							post.data().descripcion,
+							Utilidad.configurarUrlYoutube(post.data().videoLink),
+							post.data().imagenLink,
+							Utilidad.obtenerFecha(post.data().fecha.toDate())
+						)
+						$("#posts").append(postHtml)
+					})
+				}
+			})
+	}
 
 	obtenerTemplatePostVacio() {
 		return `<article class="post">
